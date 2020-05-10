@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 
 
 global df
-df = pd.read_csv('insurance.csv')
+df = pd.read_csv('.../data/insurance.csv')
 df_sort = df.sort_values(by='charges',)
 
 
@@ -31,16 +31,16 @@ app.layout = html.Div([html.H4(children='Lowest charge rate(highest is $63770)')
                        dcc.Graph(id='piechart',
                                  figure=go.Figure(go.Pie(labels=(df['region']),
                                                          values=(df['charges']),
-                                                         title='Total rates(percentage) paid by each region',
+                                                         title='Breakdown of fees by region',
                                                          insidetextorientation='horizontal',
                                                          textinfo='label+percent'))),
 
-                       dcc.Graph(id='bargraph',
-                                 figure=px.bar(df, x=df['age'],
-                                               y=df['charges'],
-                                               hover_data=['age', 'charges'],
-                                               height=650,
-                                               title='insurance fee by age')),
+                       dcc.Graph(id='histogram',
+                                 figure=px.histogram(df, x=df['age'],
+                                                     y=df['charges'],
+                                                     hover_data=['age', 'charges'],
+                                                     height=650,
+                                                     title='Insurance fee by age')),
 
                        dcc.Graph(id='stacked bargraph',
                                  figure=px.bar(df, x="sex", y="charges",
@@ -52,7 +52,7 @@ app.layout = html.Div([html.H4(children='Lowest charge rate(highest is $63770)')
                                                color='smoker',
                                                barmode='group',
                                                height=650,
-                                               title='Rates by gender(Smoker and non-Smoker)')),
+                                               title='Rates by Smoker and non-Smoker')),
 
                        dcc.Interval(id='interval-component', interval=2000,
                                     n_intervals=0)])
