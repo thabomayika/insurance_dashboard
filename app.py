@@ -2,9 +2,9 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 import plotly.express as px
-
-
 import pandas as pd
+import plotly.graph_objects as go
+
 
 global df
 df = pd.read_csv('insurance.csv')
@@ -14,8 +14,7 @@ df_sort = df.sort_values(by='charges',)
 def generate_table(dataframe, max_rows=10):
     return html.Table([
         html.Thead(
-            html.Tr([html.Th(col) for col in dataframe.columns]),
-            title='lowest charges(highest fee is 63770,43)'
+            html.Tr([html.Th(col) for col in dataframe.columns])
         ),
         html.Tbody([
             html.Tr([
@@ -26,14 +25,15 @@ def generate_table(dataframe, max_rows=10):
 
 
 app = dash.Dash(__name__)
-app.layout = html.Div([generate_table(df_sort),
+app.layout = html.Div([html.H4(children='Lowest charge rate(highest is $63770)'),
+                       generate_table(df_sort),
 
                        dcc.Graph(id='piechart',
-                                 figure=px.pie(df,
-                                               values='charges',
-                                               names='region',
-                                               color='region',
-                                               title='Percentage Fees By Region')),
+                                 figure=go.Figure(go.Pie(labels=(df['region']),
+                                                         values=(df['charges']),
+                                                         title='Total rates(percentage) paid by each region',
+                                                         insidetextorientation='horizontal',
+                                                         textinfo='label+percent'))),
 
                        dcc.Graph(id='bargraph',
                                  figure=px.bar(df, x=df['age'],
@@ -55,12 +55,7 @@ app.layout = html.Div([generate_table(df_sort),
                                                title='Rates by gender(Smoker and non-Smoker)')),
 
                        dcc.Interval(id='interval-component', interval=2000,
-                                    n_intervals=0)
-
-
-
-
-                       ])
+                                    n_intervals=0)])
 
 
 if __name__ == '__main__':
