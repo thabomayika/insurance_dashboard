@@ -1,32 +1,24 @@
 import dash
+import dash_table as ddt
 import dash_html_components as html
 import dash_core_components as dcc
 import plotly.express as px
 import pandas as pd
+import sys
 import plotly.graph_objects as go
 
 
-global df
-df = pd.read_csv('.../data/insurance.csv')
-df_sort = df.sort_values(by='charges',)
-
-
-def generate_table(dataframe, max_rows=10):
-    return html.Table([
-        html.Thead(
-            html.Tr([html.Th(col) for col in dataframe.columns])
-        ),
-        html.Tbody([
-            html.Tr([
-                html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-            ]) for i in range(min(len(dataframe), max_rows))
-        ])
-    ])
+sys.path.append('..data/insurance.csv')
+df = pd.read_csv('../data/insurance.csv')
+df_sort = df.sort_values(by='charges')
 
 
 app = dash.Dash(__name__)
-app.layout = html.Div([html.H4(children='Lowest charge rate(highest is $63770)'),
-                       generate_table(df_sort),
+app.layout = html.Div([html.H4('Lowest charge rate(highest is $63770)'),
+                       ddt.DataTable(id='table',
+                                     columns=[{"name": i, "id": i} for i in df_sort.columns],
+
+                                     data=df_sort.to_dict('records')),
 
                        dcc.Graph(id='piechart',
                                  figure=go.Figure(go.Pie(labels=(df['region']),
