@@ -1,3 +1,2 @@
-# insurance_dashboard
-This project is where I was analyzing an insurance dataframe 
-Had to create a dashboard 
+# Insurance Dashboard
+## A project where I perform the standard data analysis and I create a dashboard to visualize the data in an interactive manner
